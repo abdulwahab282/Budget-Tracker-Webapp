@@ -12,6 +12,15 @@
 require 'DB_connect.php';
 session_start();
 $username = $_SESSION["username"];
+$sql = "SELECT Total_credit, total_spend FROM user WHERE username = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$result = $stmt->get_result();
+$userData = $result->fetch_assoc();
+$total_credit = $userData['Total_credit'];
+$total_spend = $userData['total_spend'];
+
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_credit"])) {
@@ -50,8 +59,24 @@ function debit_acc(){
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ds", $newAmount, $username);
     $stmt->execute();
+
+    $sql = "UPDATE user SET Total_spend = Total_spend + ? WHERE username = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ds", $newAmount, $username);
+    $stmt->execute();
+
+    // Insert into transcation table
+    $sql = "INSERT INTO transcation(username, Transcation_id, total_amount, Category) VALUES (?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $category = "Debit";
+    $tId = time();
+    $stmt->bind_param("sids", $username, $tId, $newAmount, $category);
+    $stmt->execute();
+
+    $stmt->close();
     
 }
+
 
 $credit_history;
 $debit_history;
@@ -64,7 +89,7 @@ $stmt = $conn->prepare($sql);
     $stmt->execute();
     $resultc = $stmt->get_result();
     $rowc = $resultc->fetch_assoc();
-    $credit_history= $rowc['Date'];
+    $credit_history= $rowc ? $rowc['Date'] : 'N/A';
 
 $sql = "SELECT Date FROM transcation WHERE username = ? and Category='Debit' ORDER BY Date DESC LIMIT 2";
 $stmt = $conn->prepare($sql);
@@ -81,7 +106,7 @@ $stmt = $conn->prepare($sql);
     $stmt->execute();
     $resultc = $stmt->get_result();
     $rowc = $resultc->fetch_assoc();
-    $credit_amount= $rowc['total_amount'];
+    $credit_amount= $rowc ? $rowc['total_amount'] :0;
 
     $sql = "SELECT Date FROM transcation WHERE username = ? and Category='Debit' ORDER BY Date DESC LIMIT 2";
 $stmt = $conn->prepare($sql);
@@ -89,7 +114,7 @@ $stmt = $conn->prepare($sql);
     $stmt->execute();
     $resultc = $stmt->get_result();
     $rowc = $resultc->fetch_assoc();
-    $debit_history= $rowc['Date'];
+    $debit_history= $rowc ? $rowc ['Date'] : 'N/A';
 
     $sql = "SELECT total_amount FROM transcation WHERE username = ? and Category='debit' ORDER BY Date DESC LIMIT 1";
     $stmt = $conn->prepare($sql);
@@ -97,7 +122,7 @@ $stmt = $conn->prepare($sql);
     $stmt->execute();
     $resultc = $stmt->get_result();
     $rowc = $resultc->fetch_assoc();
-    $debit_amount= $rowc['total_amount'];
+    $debit_amount= $rowc ? $rowc['total_amount'] :0 ;
 
 
 
@@ -150,6 +175,7 @@ $stmt->close();
         <div class="row">
             <div class="col-md-12 mb-4">
                 <div class="card">
+                    <!-- Total Summary -->
                     <div class="card-body">
                         <h4 class="card-title text-center mb-4">Transaction History</h4>
                         <div class="list-group" style="max-height: 350px; overflow-y: auto;">

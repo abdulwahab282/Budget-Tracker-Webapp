@@ -11,7 +11,7 @@
     $username = $_POST["username"];
     $pass = $_POST["password"];
 
-    $sql = "INSERT INTO user VALUES (?, ?, ?, 0, 0, 0, 0)";
+    $sql = "INSERT INTO user VALUES (?, ?, ?, 0, 0, 0, 0,0)";
 
     $stmt = $conn->prepare($sql);
     $currenttime=date("Y-m-d");

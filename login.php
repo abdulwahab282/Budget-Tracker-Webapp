@@ -38,7 +38,6 @@ else
         session_start();
         $_SESSION["username"] = $user;
         $_SESSION["password"] = $pass;
-        $_SESSION["connection"] = $conn;    
         header("Location: web_pages/HomePage.php");        
     }
     else

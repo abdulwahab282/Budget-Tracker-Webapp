@@ -14,8 +14,9 @@ require 'DB_Connect.php';
 
 if($conn){
     #Connection successfull
-    // print_r("Connected");
+    require 'DB_Connect.php';
     $username=$_SESSION["username"];
+
     $sql="SELECT creation_date from user where username = ?";
     $stmt= $conn->prepare($sql);
     $stmt->bind_param("s", $username);
