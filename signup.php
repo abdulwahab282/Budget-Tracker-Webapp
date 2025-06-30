@@ -8,35 +8,6 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.cdnfonts.com/css/old-newspaper" rel="stylesheet">
 </head>
-<<<<<<< HEAD
-=======
-<?php
-    require 'DB_Connect.php';
-    if (isset($_POST["username"]) && isset($_POST["password"])) {
-        $username = $_POST["username"];
-        $pass = $_POST["password"];
-
-        $sql = "INSERT INTO user VALUES (?, ?, ?, 0, 0, 0, 0, 0)";
-
-        $stmt = $conn->prepare($sql);
-        $currenttime = date("Y-m-d");
-        $stmt->bind_param("sss", $username, $pass, $currenttime);
-        if ($stmt->execute()) {
-            $sql = "INSERT INTO budget values(?,0,0,0)";
-            $stmt = $conn -> prepare($sql);
-            $stmt->bind_param("s", $username);
-            $stmt->execute();
-            echo "<script>window.alert('Sign up Successful!');</script>";
-            $stmt->close();
-            $conn->close();
-            header("Location: index.php");
-            exit();
-        } else {
-            echo "Error: " . $stmt->error;
-        }
-    }
-?>
->>>>>>> 9d59c2f5cc551b3587008c1bc3ed3b09f1dbc8ac
 <body>
     <div class="container min-vh-100 d-flex align-items-center justify-content-center">
         <div class="card p-4 shadow-lg" style="min-width: 300px;">

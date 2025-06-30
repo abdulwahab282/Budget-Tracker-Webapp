@@ -23,7 +23,6 @@ $total_spend = $userData['total_spend'];
 
 
 
-<<<<<<< HEAD
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_credit"])) {
     credit_acc();
 }
@@ -102,18 +101,6 @@ $stmt = $conn->prepare($sql);
     $stmt->close();
 
     $sql = "SELECT total_amount FROM transcation WHERE username = ? and Category='Credit' ORDER BY Date DESC LIMIT 1";
-=======
-    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_credit"])) {
-        credit_acc($_POST["credit_category"]);
-    }
-    else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_debit"])) {
-        debit_acc($_POST["debit_category"]);
-    }
-
-    // Fetch all transactions for the user, most recent first
-    $transactions = [];
-    $sql = "SELECT Date, total_amount, Category, Type FROM transcation WHERE username = ? ORDER BY Date DESC";
->>>>>>> 9d59c2f5cc551b3587008c1bc3ed3b09f1dbc8ac
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $username);
     $stmt->execute();
@@ -161,7 +148,6 @@ $stmt->close();
                             <img src="../Images/BookCorner_Flipped.jpg" onclick="window.location.href='HomePage.php'" alt="Previous Page">
                         </div>
                         <h3 class="card-title text-center mb-4">New Transaction</h3>
-<<<<<<< HEAD
                         <form method="POST" action="">
         
     <div class="mb-3">
@@ -179,26 +165,6 @@ $stmt->close();
     <button type="submit" class="btn btn-danger w-100" name="add_debit">Debit</button>
 </form>
 
-=======
-                            <form method="POST" action="">
-                            <div class="mb-3">
-                                <label class="form-label"> Credit Amount</label>
-                                <input type="number" class="form-control" name="credit_amount" id="amount" required>
-                                <label class="form-label" required>Category:</label>
-                                <input type="text" class="form-control" name="credit_category">
-                                <button type="submit" class="btn btn-danger w-100" name="add_credit">Credit</button>
-                            </div>
-                            </form>
-                            <form method="POST" action="">
-                            <div class="mb-3">
-                                <label class="form-label">Debit Amount</label>
-                                <input type="number" class="form-control" name="debit_amount" required>
-                                <label class="form-label" required>Category:</label>
-                                <input type="text" class="form-control" name="debit_category" required>
-                            </div>
-                            <button type="submit" class="btn btn-danger w-100" name="add_debit">Debit</button>
-                            </form>
->>>>>>> 9d59c2f5cc551b3587008c1bc3ed3b09f1dbc8ac
 
                     </div>
                 </div>
@@ -219,8 +185,8 @@ $stmt->close();
                                         <small><?php echo htmlspecialchars($txn['Date']); ?></small><br>
                                         <small class="text-muted">Category: <?php echo htmlspecialchars($txn['Category']); ?></small>
                                     </div>
-                                    <span class="badge <?php echo ($txn['Type'] == 'Credit') ? 'bg-success' : 'bg-danger'; ?>">
-                                        <?php echo ($txn['Type'] == 'Credit' ? 'RS +' : 'RS -') . htmlspecialchars($txn['total_amount']); ?>
+                                    <span class="badge <?php echo ($txn['Category'] == 'Credit') ? 'bg-success' : 'bg-danger'; ?>">
+                                        <?php echo ($txn['Category'] == 'Credit' ? 'RS +' : 'RS -') . htmlspecialchars($txn['total_amount']); ?>
                                     </span>
                                 </div>
                             <?php endforeach; ?>
