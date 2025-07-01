@@ -9,6 +9,17 @@
     <link href="https://fonts.cdnfonts.com/css/old-newspaper" rel="stylesheet">
 <?php
     require_once('DBFunctions/HomePage_vars.php');
+    $budget=showbudget("monthly_budget");
+    if(isset($_POST['budget_time']) && $_POST['budget_time']=='monthly_budget'){
+        global $budget;
+        $budget = showbudget("monthly_budget");
+        }else if(isset($_POST['budget_time']) && $_POST['budget_time']=='weekly_budget'){
+        global $budget;
+        $budget = showbudget("weekly_budget");
+        }else if(isset($_POST['budget_time']) && $_POST['budget_time']=='yearly_budget'){
+        global $budget;
+        $budget = showbudget("yearly_budget");
+        }
 ?>
     <div class="container-fluid py-4" id="homePage">
         <div class="row">
@@ -59,15 +70,15 @@
                         <div class="row">
                             <div class="col-md-6">
                             <form method="post" action="">
-    <h3>Running Budget: 
-        <span class="badge bg-primary"></span>
-        <select name="budget_time" onchange="this.form.submit()">
-            <option value="monthly_budget" <?php if(isset($_POST['budget_time']) && $_POST['budget_time']=='monthly_budget') echo 'showbudget("monthly_budget")'; ?>>Monthly</option>
-            <option value="weekly_budget" <?php if(isset($_POST['budget_time']) && $_POST['budget_time']=='weekly_budget') echo ''; ?>>Weekly</option>
-            <option value="yearly_budget" <?php if(isset($_POST['budget_time']) && $_POST['budget_time']=='yearly_budget') echo ''; ?>>Yearly</option>
-        </select>
-    </h3>
-</form>
+                                <h3>Running Budget: <span class="btn btn-lg btn-primary" disabled><?php echo "$budget RS"?></span>
+                                    <span class="badge bg-primary"></span>
+                                    <select name="budget_time" onchange="this.form.submit()">
+                                        <option value="monthly_budget" <?php if(isset($_POST['budget_time']) && $_POST['budget_time']=='monthly_budget') echo 'selected'; ?>>Monthly</option>
+                                        <option value="weekly_budget" <?php if(isset($_POST['budget_time']) && $_POST['budget_time']=='weekly_budget') echo 'selected'; ?>>Weekly</option>
+                                        <option value="yearly_budget" <?php if(isset($_POST['budget_time']) && $_POST['budget_time']=='yearly_budget') echo 'selected'; ?>>Yearly</option>
+                                    </select>
+                                </h3>
+                            </form>
                             </div>
                             <div class="col-md-6">
                                 <h3>Current Savings: <span class="badge bg-success"><?php echo "$saving_amount"; ?></span></h3>

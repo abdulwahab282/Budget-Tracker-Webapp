@@ -52,8 +52,7 @@
         $stmt->bind_param("s", $username);
         $stmt->execute();
         $result = $stmt->get_result();
-        $row = $result -> fetch_assoc();
-
+        $row = $result->fetch_assoc();
         $running_budget = $row[$option];
 
         return $running_budget;

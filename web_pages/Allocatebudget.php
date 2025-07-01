@@ -30,6 +30,10 @@ if(isset($_POST["saving"])){
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ds", $amount, $username);
     $stmt->execute();
+    $sql = "UPDATE user SET total_credit = total_credit - ? where username = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ds", $amount ,$username);
+    $stmt->execute();
     $sql = "SELECT savings from user where username = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $username);
@@ -52,12 +56,12 @@ if(isset($_POST["saving"])){
                         </div>
                         <h3 class="card-title text-center mb-4">Budget Allocation</h3>
 
-                        <form method="POST" action="">
+                        <form method="POST" action="" onsubmit="BudgetVerify(document.getElementById('yearly_budget').value,document.getElementById('monthly_budget').value, document.getElementById('weekly_budget').value, event)">
                             <!-- Yearly Budget -->
                             <div class="mb-4">
                                 <label for="budget" class="form-label">Allocate yearly budget</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="budget" name="yearly_budget" required>
+                                    <input type="number" class="form-control" id="yearly_budget" name="yearly_budget" required>
                                 </div>
                             </div>
 
@@ -88,7 +92,7 @@ if(isset($_POST["saving"])){
                                 <label for="credit_saving" class="form-label">Credit saving account</label>
                                 <div class="input-group" style="width: 50%;">
                                     <input type="number" class="form-control" name="saving" required>
-                                <button type="submit" style="margin-left:12%;" class="btn btn-primary" name="credit_saving" onclick="BudgetVerify(document.getElementByName('yearly_budget').value,document.getElementByName('monthly_budget').value, document.getElementByName('weekly_budget').value)">Submit</button>
+                                <button type="submit" style="margin-left:12%;" class="btn btn-primary" name="credit_saving">Submit</button>
                                 </form>
                                 </div>
                             </div>
@@ -105,10 +109,13 @@ if(isset($_POST["saving"])){
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function BudgetVerify(y,m,w,event){
+            y = parseFloat(y);
+            m = parseFloat(m);
+            w = parseFloat(w);
             //The Monthly budget must be a twelfth or less of the Yearly budget
-            if(y/12 <= m){
+            if(m*12 <= y){
                 //The Weekly budget must be less than or equal to a 52nd of the Yearly budget.
-                if(y/52 <= w){
+                if(w*52 <= y){
                     return true;
                 }
                 else{
